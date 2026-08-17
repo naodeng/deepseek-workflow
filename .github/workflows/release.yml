@@ -1,0 +1,77 @@
+name: Build & Release Alfred Workflow
+
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Release version, e.g. 1.1.0 (defaults to a timestamped version)"
+        required: false
+        type: string
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    name: Package and publish
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Resolve release version
+        id: version
+        run: |
+          if [ "${{ github.event_name }}" = "push" ]; then
+            VER="${{ github.ref_name }}"
+          elif [ -n "${{ inputs.version }}" ]; then
+            VER="v${{ inputs.version }}"
+          else
+            VER="v$(date +%Y.%m.%d-%H%M%S)"
+          fi
+          echo "version=${VER}" >> "$GITHUB_OUTPUT"
+
+      - name: Sync version into info.plist
+        run: python3 - "${{ steps.version.outputs.version }}" <<'PY'
+import plistlib
+import sys
+
+version = sys.argv[1].lstrip("v")
+with open("Workflow/info.plist", "rb") as handle:
+    plist = plistlib.load(handle)
+plist["version"] = version
+with open("Workflow/info.plist", "wb") as handle:
+    plistlib.dump(plist, handle, sort_keys=False)
+PY
+
+      - name: Package DeepSeek.alfredworkflow
+        run: |
+          chmod +x Workflow/deepseek
+          cd Workflow
+          zip -q -r ../DeepSeek.alfredworkflow . -x "*.DS_Store"
+
+      - name: Verify package
+        run: |
+          python3 - <<'PY'
+import plistlib
+import zipfile
+
+with zipfile.ZipFile("DeepSeek.alfredworkflow") as archive:
+    names = archive.namelist()
+    assert "info.plist" in names, f"info.plist missing from package: {names}"
+    with archive.open("info.plist") as handle:
+        plist = plistlib.load(handle)
+    print(f"Packaged OK: {plist['name']} ({plist['bundleid']}) v{plist['version']}")
+PY
+
+      - name: Create GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "${{ steps.version.outputs.version }}" DeepSeek.alfredworkflow \
+            --repo "${{ github.repository }}" \
+            --title "DeepSeek Alfred Workflow ${{ steps.version.outputs.version }}" \
+            --generate-notes

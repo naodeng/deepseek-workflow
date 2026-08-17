@@ -76,6 +76,14 @@ python3 tools/build_info_plist.py /path/to/openai-workflow/Workflow/info.plist
 python3 tools/make_icon.py
 ```
 
+### 发布
+
+推送匹配 `v*` 的 tag（例如 `v1.0.0`）会触发 [release workflow](.github/workflows/release.yml)：自动把版本号同步到 `Workflow/info.plist`、打包 `DeepSeek.alfredworkflow` 并附加到 GitHub Release。也可以到 **Actions** 页面手动运行（`workflow_dispatch`），可指定版本号。
+
+```bash
+git tag v1.0.0 && git push origin v1.0.0
+```
+
 ## 许可证
 
 MIT——见 [LICENSE](LICENSE)。原 [Alfred OpenAI Workflow](https://github.com/alfredapp/openai-workflow) © Vítor Galvão，MIT 许可。

@@ -76,6 +76,14 @@ python3 tools/build_info_plist.py /path/to/openai-workflow/Workflow/info.plist
 python3 tools/make_icon.py
 ```
 
+### Releases
+
+Pushing a tag matching `v*` (e.g. `v1.0.0`) triggers the [release workflow](.github/workflows/release.yml): it syncs the version into `Workflow/info.plist`, packages `DeepSeek.alfredworkflow`, and attaches it to a GitHub Release. You can also run the workflow manually from the **Actions** tab (`workflow_dispatch`) with an optional version input.
+
+```bash
+git tag v1.0.0 && git push origin v1.0.0
+```
+
 ## License
 
 MIT — see [LICENSE](LICENSE). The original [Alfred OpenAI Workflow](https://github.com/alfredapp/openai-workflow) is © Vítor Galvão, MIT licensed.
