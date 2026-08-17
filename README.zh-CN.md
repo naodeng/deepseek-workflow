@@ -1,5 +1,9 @@
 # <img src='Workflow/icon.png' width='45' align='center' alt='icon'> DeepSeek Alfred Workflow
 
+<p align="center">
+  <a href="README.md">English</a> · <b>简体中文</b>
+</p>
+
 在 Alfred 中直接与 [DeepSeek](https://www.deepseek.com/) 对话——这是 [Alfred OpenAI Workflow](https://github.com/alfredapp/openai-workflow) 的一个分支，改为调用 [DeepSeek API](https://api-docs.deepseek.com/)（与 OpenAI 兼容）而非 OpenAI。
 
 ## 安装与配置

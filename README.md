@@ -1,5 +1,9 @@
 # <img src='Workflow/icon.png' width='45' align='center' alt='icon'> DeepSeek Alfred Workflow
 
+<p align="center">
+  <b>English</b> · <a href="README.zh-CN.md">简体中文</a>
+</p>
+
 Chat with [DeepSeek](https://www.deepseek.com/) straight from Alfred — a fork of the [Alfred OpenAI Workflow](https://github.com/alfredapp/openai-workflow) that talks to the [DeepSeek API](https://api-docs.deepseek.com/) (OpenAI-compatible) instead of OpenAI.
 
 ## Setup
